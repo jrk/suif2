@@ -1,0 +1,30 @@
+# This file contains the X options for the suifvbrowser
+#
+
+#-----------------------------------------------------------------
+
+#-----------------------------------------------------------------
+# Listboxes
+*Listbox.foreground: blue
+*Listbox.background: #f0f0f0
+*Listbox.selectForeground: blue
+*Listbox.selectBackground: #c0e0f0
+
+
+#-----------------------------------------------------------------
+# Menu Buttons
+*Menubutton.font: -*-helvetica-Bold-R-Normal--14*
+
+#-----------------------------------------------------------------
+# Menus
+*Menu.font: -*-helvetica-Bold-R-Normal--14*
+
+#-----------------------------------------------------------------
+# Text
+*Text.background: grey
+*Text.highlightColor: green
+*Text.highlightBackground: yellow
+
+#-----------------------------------------------------------------
+
+

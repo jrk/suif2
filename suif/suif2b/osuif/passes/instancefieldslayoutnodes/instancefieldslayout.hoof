@@ -1,0 +1,43 @@
+### $Id: instancefieldslayout.hoof,v 1.1.1.1 2000/06/08 00:10:02 afikes Exp $
+###
+### Annotes for instance field layout.
+
+#include "basicnodes/basic.hoof"
+#include "suifnodes/suif.hoof"
+#include "osuifnodes/osuif.hoof"
+#include "osuifextensionnodes/osuifextension.hoof"
+
+module instancefieldslayout {
+	include "basicnodes/basic.h";
+	include "suifnodes/suif.h";
+	include "osuifnodes/osuif.h";
+	include "osuifextensionnodes/osuifextension.h";
+
+	import basicnodes;
+	import suifnodes;
+	import osuifnodes;
+	import osuifextensionnodes;
+
+
+# Marks the IntConstant that holds the instance field offset.
+# (Lowering overrides (the presumably) empty IntConstant with
+# the actual offset.)
+#
+# The offset is given in bytes!
+#
+# Similar functionality is already provided by SUIF with the
+# BitOffsetOfExpression and ByteOffsetOfExpression in cfenodes.
+#
+concrete InstanceFieldOffsetAnnote : GeneralAnnote {
+	InstanceFieldSymbol * reference instance_field;
+	ClassType * reference owning_class omitted;
+};
+
+# If this annote is attached to a ClassType, the instance
+# field layout is assumed to be complete. This means that
+# the `instancefieldslayout-pass' will not change the layout.
+#
+concrete InstanceFieldLayoutCompleteAnnote : GeneralAnnote {
+};
+
+}

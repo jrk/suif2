@@ -1,0 +1,26 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+# REQUIRED_INVARIANT = region_form
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = deadcode copyprop usefulpasses
+PASS_SPEC = suif_cfgraph_pass ; \
+	copyprop ; \
+	recycle_trash ; \
+	suif_cfgraph_pass ; \
+	deadcode_pass ; \
+	recycle_trash ; \
+	gc_symbol_table ; \
+	recycle_trash ; \
+	require transforms ; \
+	fold_statements ; \
+	recycle_trash 
+
+OUTPUT_EXT = .opt

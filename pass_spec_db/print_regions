@@ -1,0 +1,15 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+# PRODUCES_INVARIANT = region_form
+PASS_TYPE = BACKEND_PASS
+REQUIRES = regionpasses
+PASS_SPEC = print_regions
+OUTPUT_EXT = .rgn

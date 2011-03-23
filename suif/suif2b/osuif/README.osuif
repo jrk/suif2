@@ -1,0 +1,64 @@
+$Id: README.osuif,v 1.1.1.1 2000/06/08 00:10:01 afikes Exp $
+
+REQUIREMENTS:
+-------------
+
+This package is part of the SUIF compiler system. It requires the
+YSUIF package to be installed before this package may be installed. 
+
+  - YSUIF: http://nci.pgroup.com/index.html
+
+DIRECTORIES:
+-------------
+
+Below is a description of some of the directories included in this
+distribution of OSUIF:
+
+  - osuifnodes: 
+    (Generic) IR nodes for OO languages.
+  - osuifextensionnodes:
+    Additional, more specific IR nodes:
+    - IR nodes that can be lowered to IR nodes defined in osuifnodes.
+    - IR nodes for single inheritance.
+  - samples:			
+    Builds a "Hello world" for OSUIF.
+  - typebuilder:		
+    Type builder for OSUIF types.  (Similar to SUIF typebuilder.)
+  - utilities:		
+    OSUIF utility functions.  (Similar to SUIF utils.)
+  - passes/lowering:		
+    Pass for lowering OSUIF to SUIF.
+  - passes/vtblnodes:	 
+    IR nodes for single inheritance vtbl construction.
+  - passes/vtblpass:
+    Passes for single inheritance vtbl construction.
+  - passes/instancefieldslayoutnodes:
+    IR nodes for single inheritance class instance layout.
+  - passes/instancefieldslayoutpass:
+    Passes for single inheritance class instance layout.
+
+INITIAL SETUP:
+--------------
+
+To build OSUIF, the SUIF environment must be setup first. Refer to the
+SUIF documentation how to do this.
+
+Additionally, the following environment variables must be set:
+  - OSUIFHOME	Points to the osuif home directory.
+
+BUILDING OSUIF:
+---------------
+
+The osuif build process uses the main SUIF makefiles.  Therefore, it is
+important that you have your SUIF environment set up properly.  Before
+you build, make sure the following environment variables are set
+properly: 
+
+  - NCIHOME
+  - OSUIFHOME
+
+To build osuif, simply goto its base directory and run gmake.
+
+  cd $OSUIFHOME
+  gmake
+

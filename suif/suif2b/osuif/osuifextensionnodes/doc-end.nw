@@ -1,0 +1,4 @@
+% Make \end{document} a chunk by itself to allow cross-reference info
+% to be dumped in before it (noweave -delay).
+@
+\end{document}

@@ -1,0 +1,19 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = constprop regionpasses transforms suifprinter
+PASS_SPEC = dismantle_empty_scope_statements ; \
+	dismantle_multi_entry_scope_statements; \
+	create_regions ; \
+	constprop; \
+	invalidate_regions; \
+	recycle_trash
+OUTPUT_EXT = .cprop

@@ -1,0 +1,16 @@
+nci/solib/libosuifnodes.so
+nci/solib/libosuifextensionnodes.so
+nci/solib/libosuiftypebuilder.so
+nci/solib/libosuifutilities.so
+nci/solib/libvtblnodes.so
+nci/solib/libvtblpass.so
+nci/solib/libinstancefieldslayoutnodes.so
+nci/solib/libinstancefieldslayoutpass.so
+nci/solib/libosuiflowering.so
+nci/solib/libosuifprint.so
+nci/solib/libcpp_osuifnodes.so
+nci/solib/libcpp_osuif_typebuilder.so
+nci/solib/libcpp_transforms.so
+nci/solib/libcpplowering.so
+nci/bin/pretty_print
+nci/bin/create_osuif_hello_world

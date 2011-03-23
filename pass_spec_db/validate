@@ -1,0 +1,4 @@
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = usefulpasses suiflocation
+PASS_SPEC = find_unowned;check_types
+OUTPUT_EXT = .chk

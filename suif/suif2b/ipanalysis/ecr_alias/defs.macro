@@ -1,0 +1,43 @@
+  HANDLE_DISPATCH(pre, procedure_definition, ProcedureDefinition);
+  HANDLE_DISPATCH(post, procedure_definition, ProcedureDefinition);
+  HANDLE_DISPATCH(post, variable_definition, VariableDefinition);
+  HANDLE_DISPATCH(pre, variable_symbol, VariableSymbol);
+  HANDLE_DISPATCH(pre, annote, Annote);
+
+  HANDLE_DISPATCH(post, statement, Statement);
+  HANDLE_DISPATCH(post, for_statement, ForStatement);
+  HANDLE_DISPATCH(post, expression, Expression);
+  HANDLE_DISPATCH(post, array_reference_expression, ArrayReferenceExpression);
+  HANDLE_DISPATCH(post, store_variable_statement, StoreVariableStatement);
+  HANDLE_DISPATCH(post, load_expression, LoadExpression);
+  HANDLE_DISPATCH(post, load_variable_expression, LoadVariableExpression);
+//  HANDLE_DISPATCH(post, call_expression, CallExpression);
+  HANDLE_DISPATCH(post, symbol_address_expression, SymbolAddressExpression);
+  HANDLE_DISPATCH(post, va_arg_expression, VaArgExpression);
+  HANDLE_DISPATCH(post, va_start_statement, VaStartStatement);
+  HANDLE_DISPATCH(post, va_end_statement, VaEndStatement);
+  HANDLE_DISPATCH(post, store_statement, StoreStatement);
+  HANDLE_DISPATCH(post, return_statement, ReturnStatement);
+  HANDLE_DISPATCH(post, call_statement, CallStatement);
+
+  HANDLE_DISPATCH(post, expression_value_block, ExpressionValueBlock);
+  HANDLE_DISPATCH(post, multi_value_block, MultiValueBlock);
+  HANDLE_DISPATCH(post, repeat_value_block, RepeatValueBlock);
+  HANDLE_DISPATCH(post, undefined_value_block, UndefinedValueBlock);
+
+
+//  HANDLE_DISPATCH(post, expression, Expression);
+//  HANDLE_DISPATCH(post, load_expression, LoadExpression);
+//  HANDLE_DISPATCH(post, call_expression, CallExpression);
+//  HANDLE_DISPATCH(post, return_statement, ReturnStatement);
+//  HANDLE_DISPATCH(post, store_statement, StoreStatement);
+
+//  HANDLE_DISPATCH(post, load_address_expression, LoadAddressExpression);
+//  HANDLE_DISPATCH(post, va_arg_statement, VaArgExpression);
+//  HANDLE_DISPATCH(post, va_start_statement, VaStartStatement);
+//  HANDLE_DISPATCH(post, va_end_expression, VaEndStatement);
+//  HANDLE_DISPATCH(post, array_reference_expression, ArrayReferenceExpression);
+
+//  HANDLE_DISPATCH(post, store_multi_variable_statement, StoreMultiVariableStatement);
+//  HANDLE_DISPATCH(post, store_variable_statement, StoreVariableStatement);
+//  HANDLE_DISPATCH(post, variable_symbol, VariableSymbol);

@@ -1,0 +1,33 @@
+  // the procedure definition
+//  HANDLE_DISPATCH(procedure_definition, ProcedureDefinition);
+
+  // These should NEVER be needed.
+  //HANDLE_DISPATCH(statement, Statement);
+  HANDLE_DISPATCH(execution_object, ExecutionObject);
+
+  // statements
+  HANDLE_DISPATCH(statement_list, StatementList);
+  HANDLE_DISPATCH(eval_statement, EvalStatement);
+  HANDLE_DISPATCH(for_statement, ForStatement);
+  HANDLE_DISPATCH(if_statement, IfStatement);
+  HANDLE_DISPATCH(while_statement, WhileStatement);
+  HANDLE_DISPATCH(do_while_statement, DoWhileStatement);
+  HANDLE_DISPATCH(va_start_statement, VaStartStatement);
+  HANDLE_DISPATCH(va_end_statement, VaEndStatement);
+  HANDLE_DISPATCH(store_statement, StoreStatement);
+  HANDLE_DISPATCH(store_variable_statement, StoreVariableStatement);
+  HANDLE_DISPATCH(scope_statement, ScopeStatement);
+  HANDLE_DISPATCH(return_statement, ReturnStatement);
+  HANDLE_DISPATCH(jump_statement, JumpStatement);
+  HANDLE_DISPATCH(jump_indirect_statement, JumpIndirectStatement);
+  HANDLE_DISPATCH(branch_statement, BranchStatement);
+  HANDLE_DISPATCH(multi_way_branch_statement, MultiWayBranchStatement);
+  HANDLE_DISPATCH(label_location_statement, LabelLocationStatement);
+  HANDLE_DISPATCH(mark_statement, MarkStatement);
+
+  //  HANDLE_DISPATCH(expression, Expression);
+
+  // expressions with control flow
+  //  HANDLE_DISPATCH(call_expression, CallExpression);
+  HANDLE_DISPATCH(call_statement, CallStatement);
+

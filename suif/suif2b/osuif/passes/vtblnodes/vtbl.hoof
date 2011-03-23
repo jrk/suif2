@@ -1,0 +1,59 @@
+### $Id: vtbl.hoof,v 1.1.1.1 2000/06/08 00:10:03 afikes Exp $
+###
+### Annotes for virtual function table support.
+
+
+#include "basicnodes/basic.hoof"
+#include "suifnodes/suif.hoof"
+#include "osuifnodes/osuif.hoof"
+
+module vtbl {
+	include "basicnodes/basic.h";
+	include "suifnodes/suif.h";
+	include "osuifnodes/osuif.h";
+
+	import basicnodes;
+	import suifnodes;
+	import osuifnodes;
+
+
+# Marks the VariableSymbol where the vtbl should go.
+# (The vtbl is inserted at the VariableSymbols's definition)
+#
+concrete VtblAnnote : GeneralAnnote {
+	ClassType * reference owning_class;
+};
+
+# Marks the IntConstant that holds the vtbl slot.
+# (Lowering overrides (the presumably) empty IntConstant with
+# the slot number.)
+#
+concrete VtblSlotAnnote : GeneralAnnote {
+	InstanceMethodSymbol * reference vtbl_slot;
+};
+
+# Marks the IntConstant that holds the numbert of vtbl slots.
+# (Lowering overrides (the presumably) empty IntConstant with
+# the slot number.)
+#
+concrete VtblSlotCountAnnote : GeneralAnnote {
+	ClassType * reference owning_class;
+};
+
+# If this annote is attached to a ClassType, no vtbl
+# is constructed for this class by the 'vtbl-pass'.
+# However, the `vtbl-annote-pass' is not affected.
+#
+concrete NoVtblAnnote : GeneralAnnote {
+};
+
+
+# Marks the actual number of the vtbl slot.
+# Used internally only.
+# Attached to the InstanceMethodSymbol that represents the slot.
+#
+concrete VtblSlotNumberAnnote : GeneralAnnote {
+	IInteger slot_number;
+};
+
+}

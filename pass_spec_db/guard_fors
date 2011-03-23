@@ -1,0 +1,6 @@
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = usefulpasses transforms
+PASS_SPEC = fold_statements; \
+	guard_all_fors ; \
+	recycle_trash
+OUTPUT_EXT = .cgd

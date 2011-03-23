@@ -1,0 +1,12 @@
+$Id: README,v 1.1.1.1 2000/06/08 00:10:01 afikes Exp $
+
+These directory contains support for DOC++
+(See http://www.imaginator.com/doc++)
+
+osuif.dxx is the toplevel documentation node.
+
+
+The generated docu is rather disappointing and annotating the code
+seems to be too intrusive. For this reason we stopped using DOC++. (If
+enough ppl yell at us we might reconsider...;-))
+

@@ -1,0 +1,267 @@
+proc suif_init {} {
+  load libtclsuif.so
+  suif import cfenodes
+}
+
+proc make_window_path {args} {
+  join $args "."
+}
+
+
+# match the structure of two lists
+# returns 1 if matches, 0 ohterwise
+# A "?" matches one element in a list.
+# A "??" at the end of a list matches a the rest of the list
+#  { a ? c} matches {a b c}
+#  {a ??} matches {a b c d}
+#
+proc lmatch {pat lst} {
+  if {[string compare $pat "??"]==0} {
+    return 1
+  }
+  if {[llength $pat]==0} {
+    return expr [llength $lst]==0
+  }
+  if {[llength $pat]==1} {
+    if {[string compare $pat $lst]==0} {return 1}
+    if {[string compare $pat "?"]==0} {return 1}
+    return 0
+  }
+  if {[lmatch [lindex $pat 0] [lindex $lst 0]]} {
+    set end [expr [llength $pat]-1]
+    return [lmatch [lrange $pat 1 $end] [lrange $lst 1 $end]]
+  }
+  return 0
+}
+
+
+# make a widget for list values
+#
+proc make_list_value_widget {parent value type rowno} {
+  set top [frame [make_window_path $parent value_$rowno]]
+  set i 0
+  foreach v $value {
+    set vwidget [make_field_value_widget $top $v $type [incr i]]
+    pack $vwidget -side top -anchor nw
+  }
+  return $top
+}
+
+
+# make a widget for a field value.
+# May return null string.
+#
+proc make_field_value_widget {parent value type rowno} {
+  if {[lmatch {pointer {object ??} ??} $type]} {
+    if {[string length $value]==0} {return ""}
+    return [button [make_window_path $parent value_$rowno] \
+                   -text $value -command "show_object $value"]
+  }
+  if {[lmatch {list ??} $type]} {
+    if {[llength $value]==0} {return ""}
+    return [make_list_value_widget $parent $value [lindex $type 1] $rowno]
+  }
+  if {[lmatch {aggregate ??} $type]} {
+    set fnames [lindex $type 2]
+    set ftypes [lindex $type 3]
+    return [make_aggregate_frame $parent $rowno $fnames $value $ftypes]
+  }
+  if {[lmatch {elementary String} $type] || \
+      [lmatch {elementary LString} $type]} {
+    return [label [make_window_path $parent value_$rowno] -text \"$value\"]
+  }
+  return [label [make_window_path $parent value_$rowno] -text $value]
+}
+    
+	
+
+# make a frame showing the content of a suifobject
+#
+proc make_field_content_frame {parent names values types} {
+  set fr [frame [make_window_path $parent content]]
+  for {set i 0} {$i < [llength $values]} {incr i} {
+    set name [lindex $names $i]
+    set value [lindex $values $i]
+    set type [lindex $types $i]
+    grid [label [make_window_path $fr name_$i] \
+                -text $name] -column 0 -row $i -sticky nw
+    set vframe [make_field_value_widget $fr $value $type $i]
+    if {[string length $vframe]>0} {grid $vframe -column 1 -row $i -sticky nw}
+  }
+  return $fr
+}
+
+
+proc make_aggregate_frame {parent label field_names field_values field_types} {
+  set top [frame [make_window_path $parent frame_$label]]
+  set label [label [make_window_path $top label] -text $label]
+  pack $label -side top -anchor nw
+  pack [label [make_window_path $top left_edge] -text " "] -side left -fill y
+  pack [make_field_content_frame $top $field_names $field_values $field_types]
+  return $top
+}
+
+
+# make a frame showing content of the object
+#
+proc make_object_frame {parent obj} {
+  set fields_content [suif_fields $obj]
+  set names [lindex $fields_content 0]
+  set values [lindex $fields_content 1]
+  set types [lindex $fields_content 2]
+  set top [make_aggregate_frame $parent $obj $names $values $types]
+  pack $top
+  return $top
+}
+
+  
+# show contents of a suif object in a toplevel window.
+# return the toplevel window
+# the toplevel window is created on demand.  If one for this object already
+#  exit, just raise it.
+#
+proc show_object {obj} {
+  set top "._${obj}_object"
+  if {[string compare [info command $top] ""]!=0} {
+    wm deiconify $top
+    raise $top
+    focus $top
+    return $top
+  }
+  toplevel $top
+  set c [make_window_path $top canvas]
+  set s [scrollbar [make_window_path $top scroll] -command "$c yview"]
+  canvas $c -yscrollcommand "$s set"
+  set objw [make_object_frame $top $obj]
+  $c create window 0 0 -window $objw -anchor nw
+  update
+  set w [winfo reqwidth $objw]
+  set h [winfo reqheight $objw]
+  $c configure -scrollregion [list 0 0 $w $h] -width $w -height $h
+  pack $c -side left -anchor nw -fill y
+  pack $s -side right -fill y
+  return $top
+}
+
+proc s {} {show_object [suif_fsb]}
+
+#  toplevel $top
+#  pack [make_object_frame $top $obj]
+#  return $top
+
+
+
+
+
+
+
+
+# Create the window that interactively execute suif modules
+# Create the following widgets
+#  ._suif_exec                     -
+#  ._suif_exec.history_fr
+#  ._suif_exec.history_fr.history  - listbox
+#  ._suif_exec.history_fr.yscroll
+#  ._suif_exec.cmd_fr
+#  ._suif_exec.cmd_fr.module      - button for module name
+#  ._suif_exec.cmd_fr.args        - entry for arguments
+#  ._suif_exec.control_fr
+#  ._suif_exec.control_fr.go
+#  ._suif_exec.control_fr.clear
+#  ._suif_exec.control_fr.lib
+#
+proc suif_exec {} {
+  set top ._suif_exec
+  if {[winfo exists $top]} {destroy $top}
+  toplevel $top
+
+  frame $top.cmd_fr
+
+  frame $top.history_fr
+  listbox $top.history_fr.history
+  bind $top.history_fr.history <Double-Button-1> {
+    set cmd [selection get]
+    ._suif_exec.cmd_fr.module configure -text [lindex $cmd 0]
+    ._suif_exec.cmd_fr.args delete 0 end
+    ._suif_exec.cmd_fr.args insert 0 [lrange $cmd 1 [llength $cmd]]
+  }
+  make_y_scroll $top.history_fr $top.history_fr.history
+  
+  button $top.cmd_fr.module -text "<no_module>" -command \
+   "$top.cmd_fr.module configure -text \[suif_pick_module $top.cmd_fr.module \[$top.cmd_fr.module cget -text\] \]"
+  entry $top.cmd_fr.args -width 40
+  bind $top.cmd_fr.args <Return> "suif_exec_2 $top"
+  pack $top.cmd_fr.module -side left -padx 4m -pady 3m
+  pack $top.cmd_fr.args -side left -padx 4m -pady 3m -expand 1 -fill x
+
+  frame $top.control_fr
+  button $top.control_fr.clear -text clear -command \
+    "$top.cmd_fr.args delete 0 end"
+  button $top.control_fr.go -text go -command "suif_exec_2 $top"
+  button $top.control_fr.lib -text lib -command \
+    "$top.cmd_fr.args insert insert \[suif_libs $top.control_fr.lib\]"
+  pack $top.control_fr.clear -side left -padx 4m -pady 2m -expand 1
+  pack $top.control_fr.lib -side left -padx 4m -pady 2m -expand 1
+  pack $top.control_fr.go -side left -padx 4m -pady 2m -expand 1
+
+  pack $top.control_fr -side bottom -fill x -expand 0
+  pack $top.cmd_fr -side bottom -fill x -expand 0
+  pack $top.history_fr -side top -fill both -expand 1
+}
+
+
+# Called by suif_exec to execute a module.
+# Name of the module is in $top.module
+# Arguments is in $top.args
+#
+proc suif_exec_2 {top} {
+  set module [lindex [$top.cmd_fr.module configure -text] 4]
+  set args [$top.cmd_fr.args get]
+  set cmd "$module $args"
+  suif_exec_insert_history $top.history_fr.history $cmd
+  uplevel 0 "suif $cmd"
+  return $cmd
+}
+
+# insert $cmd to the end of listbox $lb, prune the top element if necessary
+# to keep only 24 items.
+#
+proc suif_exec_insert_history {lb cmd} {
+  $lb insert end $cmd
+  $lb see end
+  if {[$lb size]>24} {$lb delete 0 [expr "[$lb size]-24-1"]}
+}
+
+
+# Popup a widget to let user select a module.
+#
+proc suif_pick_module {parent {preselect ""}} {
+  set mods [lsort [suif_list_modules]]
+  return [show_and_pick $parent $mods "Please pick a module" $preselect]
+}
+
+
+
+
+
+
+# return a list of all possible libraries in LD_LIBRARY_PATH
+#
+proc suif_list_libs {} {
+  global env
+  set res {}
+  set dirs [split $env(LD_LIBRARY_PATH) ":"]
+  foreach dir $dirs {
+    foreach f [glob -nocomplain $dir/lib*.so] {
+      if {[regexp ".*/lib(.*).so" $f dummy libname]} {
+	lappend res $libname
+      }
+    }
+  }
+  return $res
+}
+
+
+proc suif_libs {{parent .}} {
+  show_and_pick $parent [lsort [suif_list_libs]] "Please pick a library"
+}

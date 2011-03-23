@@ -1,0 +1,78 @@
+\documentstyle[noweb]{article}
+%\noweboptions{smallcode,longxref}
+\noweboptions{smallcode}
+
+% Give the l2h (LaTeX to HTML) filter some hints
+%
+% l2h ignore nwcodepenalty =
+% l2h ignore raggedbottom
+% l2h envblock openissue blockquote
+
+% Adjust dimensions before setting \pagestyle: it looks at
+% some of them
+%
+\textwidth 16.0cm
+\textheight 23.5cm
+\oddsidemargin 0.1in
+\evensidemargin 0.1in
+\topmargin -0.5in
+\parindent 0.0in
+\parskip 1.5ex
+\sloppy
+\raggedbottom
+
+\pagestyle{noweb}
+
+% Replace some noweb.sty definitions to improve page breaks
+%
+\makeatletter
+\nwcodepenalty=9999			% Was =\@highpenalty (>9999 disallows
+					% ... _any_ break in code)
+\def\nwbegincode#1{%
+  \begingroup
+    \topsep \nwcodetopsep
+    \@beginparpenalty \nwcodepenalty	% Use \nwcodepenalty ...
+    \@endparpenalty -\nwcodepenalty	% ... instead of \@highpenalty
+    \@begincode}
+\def\nwendcode{%
+  \endtrivlist \endgroup \goodbreak}	% Use \goodbreak ...
+\let\nwdocspar=\goodbreak		% ... instead of \filbreak
+
+\makeatother
+
+\title{The OSUIF Library}
+\author{{\tt osuif@cs.ucsb.edu}\\
+	Department of Computer Science\\
+	University of California, Santa Barbara\\ }
+
+
+\newenvironment{openissue}{\begin{quote}{\bf OPEN DESIGN ISSUE:}}{\end{quote}}
+
+
+\begin{document}
+\maketitle
+
+\vspace*{1in}
+
+\begin{abstract}
+
+{\em Object SUIF} (OSUIF) is an extension to SUIF2, which provides
+support for the representation of object-oriented languages. It can be
+viewed as a layer on top of the SUIF2 system.
+
+\vspace*{1in}
+
+\begin{center}
+{\sl DRAFT NOTICE}
+\end{center}
+This document and the implementation it describes are works in progress.
+We cordially invite suggestions on design, on implementation or
+documentation style, and on any other relevant issues, profound or picky.
+\end{abstract}
+
+\newpage
+\tableofcontents
+
+% Start a new chunk to cause noweb to put source filename in heading
+%
+@

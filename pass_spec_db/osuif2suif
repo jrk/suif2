@@ -1,0 +1,48 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+# PRODUCES_INVARIANT = region_form
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = j2s osuiflowering instancefieldslayoutpass vtblpass j2s_vtblpass \
+	transforms usefulpasses
+PASS_SPEC =  \
+    lower_osuif_symbols -lower-static-fields -symtab external -mangle-name _ ; \
+    lower_osuif_symbols -lower-static-methods -symtab external -mangle-name _ ; \
+    lower_static_method_call_statements ; \
+    lower_static_method_call_expressions ; \
+\
+    # Lower InstanceFieldSymbols \
+    layout_single_inheritance_instance_fields ; \
+    # Insert field offsets at all InstanceFieldsLayoutOffsetAnnotes \
+    lower_single_inheritance_instance_field_offset ; \
+\
+    # VtblAnnote -- Build vtbls \
+    attach_single_inheritance_vtbl_to_variable_symbol ; \
+    # Insert VtblSlotNumberAnnotes to all InstanceMethodSymbols \
+    # (This is necessary for classes whose vtbl has not been built) \
+    build_single_inheritance_vtbl -attach-vtbl-slot-number-annotes ; \
+    # Insert vtbl slots at all VtblSlotAnnotes \
+    lower_single_inheritance_vtbl_slot_annote ; \
+    # Insert vtbl sizes at all VtblSlotCountAnnotes \
+    lower_single_inheritance_vtbl_slot_count_annote ; \
+\
+    lower_j2s_instance_method_call_expressions ; \
+\
+    lower_osuif_symbols -lower-instance-methods -symtab external -mangle-name _ ; \
+    lower_osuif_symbols -lower-per-class-symbol-table ; \
+    lower_definition_block ; \
+\
+### SUIF optimizations \
+#    ConstantFolderPass \
+\
+    name_all_symbols ; \
+    gc_symbol_table
+
+OUTPUT_EXT = .suif

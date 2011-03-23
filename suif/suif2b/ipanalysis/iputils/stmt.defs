@@ -1,0 +1,7 @@
+  HANDLE_DISPATCH(statement, Statement);
+  HANDLE_DISPATCH(call_statement, CallStatement);
+  HANDLE_DISPATCH(store_variable_statement, StoreVariableStatement);
+  HANDLE_DISPATCH(store_statement, StoreStatement);
+  HANDLE_DISPATCH(return_statement, ReturnStatement);
+  HANDLE_DISPATCH(mark_statement, MarkStatement);
+  HANDLE_DISPATCH(if_statement, IfStatement);

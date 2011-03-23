@@ -1,0 +1,15 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+# PROVIDES_INVARIANT = ecr
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = ecr_alias
+PASS_SPEC = ecr_alias_pass -do-all-procs -silent
+OUTPUT_EXT = .ecr

@@ -1,0 +1,8 @@
+import convertsuif1to2; 
+import deadcode; 
+import suif_cfgraph; 
+convertsuif1to2_pass /home/dlheine/ecr_results/li95.loopnorm; 
+pipeline { 
+	suif_cfgraph_pass; 
+	reaching_defs_pass;
+}

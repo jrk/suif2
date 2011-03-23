@@ -1,0 +1,12 @@
+$Id: README,v 1.1.1.1 2000/06/08 00:10:03 afikes Exp $
+
+Printing:
+-  pretty-print driver outputs the osuif intermediate format in a readable 
+   manner.
+-  To the driver we can specify the commands in a file, an example file 
+   testporky.osuif2 is in the current directory. 
+-  To execute the pretty_print with this file the command is:
+   pretty_print -f testporky.osuif2
+-  This pass, performs a pretty print for the osuif intermediate formats. 
+   To further extend or modify the output a user can register his own print 
+   methods with the printing_maps.

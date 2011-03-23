@@ -1,0 +1,12 @@
+/**@name OSUIF
+ *
+ * @memo The OSUIF package consists of several libraries, passes, and
+ * programs.
+ */
+
+//@{
+	//@Include: ../osuifnodes/osuifnodes.dxx
+	//@Include: ../utilities/osuifutilities.dxx
+	//@Include: ../passes/passes.dxx
+	//@Include: ../samples/create_osuif_hello_world.dxx
+//@}

@@ -1,0 +1,20 @@
+$Id: README,v 1.1.1.1 2000/06/08 00:10:02 afikes Exp $
+
+lowering
+--------
+
+Lowers
+- StaticMethodSymbols
+- InstanceMethodSymbols
+- StaticFieldSymbols
+from the ClassType to another symbol table.
+
+The destination symbol table can be
+- external symtab
+- file set symtab
+- file block symtab (of the file block the ClassType resides)
+- one symtab "up" (i.e., towards the root of the IR ownership tree)
+  relative to the ClassType
+
+When a Symbol is moved, its name can be manged in order to give it a
+globally unique name.

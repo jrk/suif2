@@ -1,0 +1,9 @@
+### OSUIF-specific Makefile rules
+###
+### $Id: Makefile.osuif,v 1.1.1.1 2000/06/08 00:10:01 afikes Exp $
+
+include $(NCIHOME)/Makefile.std
+
+
+
+

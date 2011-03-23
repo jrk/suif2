@@ -1,0 +1,45 @@
+
+# create a y scroll bar and link with $son.
+#
+proc make_y_scroll {parent son} {
+  set scroller [scrollbar $parent.yscroll -command "$son yview"]
+  pack $scroller -in $parent -side right -fill y
+  pack $son -in $parent -side left -expand 1 -fill both
+  $son configure -yscrollcommand "$scroller set"
+}
+
+
+
+# Popup a list right on top of $parent.
+# User may pick one item which is returned by this proc.
+#
+proc show_and_pick {parent lst title {preselect ""}} {
+  global _tkutil_pick
+  set _tkutil_pick ""
+  set top ._tkutil_picker
+  if {[winfo exists $top]} {destroy $top}
+  toplevel $top
+  wm title $top $title
+  set lb [listbox $top.list]
+  foreach item $lst {
+    $lb insert end $item
+    if {[string compare $item $preselect]==0} {
+      $lb selection set end
+      $lb see end
+    }
+  }
+  bind $lb <Double-Button-1> {
+    set _tkutil_pick [selection get]
+    destroy ._tkutil_picker
+  }
+  make_y_scroll $top $lb
+  wm geometry $top "+[winfo rootx $parent]+[winfo rooty $parent]"
+
+  set old_focus [focus]
+  grab set $top
+  focus $lb
+  tkwait window $top
+  focus $old_focus
+  return $_tkutil_pick
+}
+

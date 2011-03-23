@@ -1,0 +1,14 @@
+to_szot = to<ScopedObject>
+
+szot->get_scope()
+
+basic_factory::create_variable_symbol() needs
+a NAME!!
+lookup by name returns an iterator.
+
+methods all over the place need "const".
+value classes may be passed by const class &.
+
+
+TYPE of a sourceop
+TYPE of a EXPRESSION

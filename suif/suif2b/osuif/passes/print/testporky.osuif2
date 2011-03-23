@@ -1,0 +1,7 @@
+import basicnodes
+import suifnodes
+import suifpasses
+import osuifprint
+import osuifnodes
+load osuif_hello_world.suif
+osuifprint

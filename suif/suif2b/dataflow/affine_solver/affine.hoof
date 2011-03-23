@@ -1,0 +1,82 @@
+# file "affine.hoof"
+#
+#
+#      Copyright (c) 1999 Stanford University
+#
+#      All rights reserved.
+#
+#      This software is provided under the terms described in
+#      the "suif_copyright.h" include file.
+
+#
+# this is a set of nodes that
+# are linear and affine expressions
+# they can be easily compared
+#
+#include "basicnodes/basic.hoof"
+module affine {
+
+    include "basicnodes/basic.h";
+    
+    # Represents Variable * Expression
+    # Both of these can be quickly dismantled
+    # special variables that can participate in
+    # expressions. 
+    concrete OpcodeVariable : VariableSymbol {
+	# "aliased_memory", 
+	# "undefined_value" - TOP
+	# "unknown_value", - BOTTOM
+	# "one", - BOTTOM
+	LString name;
+    };
+    concrete OpcodeExpression : Expression {
+	# "aliased_memory", 
+	# "undefined_value" - TOP
+	# "unknown_value", - BOTTOM
+	LString name;
+    };
+
+    concrete LinearExpression : Expression  {
+	# Multiply variable * expression
+	VariableSymbol * reference index in variable_sources;
+	Expression * owner expression in source_ops;
+    };
+# This represents an affine expression.
+# a x idx1 + b x idx2 + c;
+# where idx1 and idx2 are LOOP count indices.
+# and a, b, and c are arbitrary terms that do NOT
+# contain loop indices. (we'll do better later)
+# 
+# These are represented as a sum of terms (in the list _sum_terms)
+# each term is a multiplication of the index and the appropriate expression
+# (when the index is NULL, it is the last term.
+#
+# Later plans:
+#   order these indices by inclusive order.
+#   Then the inner expressions can use the outer indices.
+#
+# If there are NO 
+    concrete AffineExpression : Expression  {
+	# Sum of linear expressions  and  an expression
+	Expression * owner invariant in source_ops;
+	list<LinearExpression * owner> linear_sum in source_ops;
+    };
+
+# represents a Store statement with an affine address
+# and value.
+    concrete IndirectReferenceStatement : Statement {
+      AffineExpression * owner address in source_ops;
+      AffineExpression * owner value in source_ops;
+    };
+
+    # or just a suif_object?
+    concrete IndirectReferenceList : ExecutionObject {
+      list<IndirectReferenceStatement *owner> references;
+    };
+
+    concrete SymbolicBinding : SuifObject {
+	VariableSymbol * reference variable;
+	Expression * owner value;
+    };
+
+}

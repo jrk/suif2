@@ -1,0 +1,10 @@
+import testpasses
+import basicnodes
+import suifnodes
+import porky
+import osuifnodes
+load osuif_hello_world.suif
+pipeline {
+  build_single_vtable
+}
+print

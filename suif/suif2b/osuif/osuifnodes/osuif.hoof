@@ -1,0 +1,163 @@
+
+#include "basicnodes/basic.hoof"
+#include "suifnodes/suif.hoof"
+
+module osuif{
+  include <iostream.h>;
+  include "iokernel/cast.h";
+  include "basicnodes/basic.h";
+  include "suifnodes/suif.h";
+
+  import basicnodes;
+  import suifnodes;
+
+abstract MethodType : CProcedureType {
+CPP_DECLARE 
+public:
+  virtual bool is_equivalent( Type* type1, Type* type2 );
+  virtual bool is_equivalent( MethodType* mtype );
+CPP_DECLARE
+};
+concrete StaticMethodType : MethodType {
+CPP_DECLARE 
+public:
+  virtual bool is_equivalent( Type* type1, Type* type2 );
+  virtual bool is_equivalent( MethodType* mtype );
+CPP_DECLARE
+};
+concrete InstanceMethodType : MethodType {
+CPP_DECLARE 
+public:
+  virtual QualifiedType* get_receiver_type();
+  virtual void set_receiver_type(QualifiedType* receiver);
+
+  virtual bool is_equivalent( Type* type1, Type* type2 );
+  virtual bool is_equivalent( MethodType* mtype );
+CPP_DECLARE
+};
+concrete InstanceMethodSymbol : ProcedureSymbol{
+  searchable_list<LString> attributes;
+  ClassType * reference owning_class omitted;
+
+  bool is_dispatched default {true};
+  InstanceMethodSymbol * reference overridden_method omitted;
+
+CPP_DECLARE 
+  public:
+    bool is_equivalent( InstanceMethodSymbol* mysm );
+    bool overrides( InstanceMethodSymbol* msym );
+CPP_DECLARE 
+};
+concrete InstanceFieldSymbol : FieldSymbol{
+  searchable_list<LString> attributes;
+  ClassType * reference owning_class omitted;
+};
+concrete StaticFieldSymbol : VariableSymbol {
+  searchable_list<LString> attributes;
+  ClassType * reference owning_class omitted;
+};
+concrete StaticMethodSymbol : ProcedureSymbol {
+  searchable_list<LString> attributes;
+  ClassType * reference owning_class omitted;
+
+CPP_DECLARE 
+  public:
+    bool is_equivalent( StaticMethodSymbol *mysm );
+CPP_DECLARE 
+};
+concrete PerClassSymbolTable : BasicSymbolTable {
+};
+concrete InstanceFieldSymbolTable : GroupSymbolTable {
+  constrain symbol_table_objects to searchable_list<InstanceFieldSymbol *owner>;
+};
+concrete InstanceMethodSymbolTable : BasicSymbolTable {
+  constrain symbol_table_objects to searchable_list<InstanceMethodSymbol* owner>;
+};
+concrete ClassType : StructType{
+  list<InheritanceLink * owner > child_classes;
+  list<InheritanceLink * reference > parent_classes;
+  searchable_list<LString> attributes;
+  bool methods_are_complete build {false};
+  DefinitionBlock * owner definition_block;
+  PerClassSymbolTable * owner per_class_symbol_table
+        build {::create_per_class_symbol_table(get_suif_environment())};
+  InstanceMethodSymbolTable * owner instance_method_symbol_table
+        build {::create_instance_method_symbol_table(get_suif_environment())};
+  
+  constrain group_symbol_table to InstanceFieldSymbolTable * owner
+        build {::create_instance_field_symbol_table(get_suif_environment())};
+
+CPP_DECLARE
+public:
+  void set_fields_are_complete( bool b ) {
+    set_is_complete( b );
+  }
+  bool get_fields_are_complete() const {
+    return get_is_complete();
+  }
+
+  virtual bool is_ancestor_class(ClassType* ancestor_class);
+  virtual bool is_descendant_class(ClassType* descendant_class); 
+
+    virtual void add_static_field_symbol( StaticFieldSymbol* sym );
+    virtual bool has_static_field_symbol( const LString& name );
+    virtual StaticFieldSymbol* lookup_static_field_symbol( const LString& name);
+    virtual void add_static_method_symbol( StaticMethodSymbol* sym );
+    virtual bool has_static_method_symbol( const LString& name );
+    virtual StaticMethodSymbol* lookup_static_method_symbol( const LString& name );
+  virtual void add_instance_field_symbol( InstanceFieldSymbol* fsym );
+  virtual bool has_instance_field_symbol( const LString& name );
+  virtual InstanceFieldSymbol* lookup_instance_field_symbol( const LString& name );
+    virtual void add_instance_method_symbol( InstanceMethodSymbol* msym );
+    virtual bool has_instance_method_symbol( const LString& name );
+    virtual InstanceMethodSymbol* lookup_instance_method_symbol( const LString& name );
+CPP_DECLARE
+}; 
+concrete InheritanceLink : AnnotableObject{
+  searchable_list<LString> attributes;
+  ClassType * reference parent_class_type;
+  ClassType * reference child_class_type;
+
+CPP_DECLARE
+public:
+  virtual bool is_ancestor_class(ClassType* the_ancestor_class) const;
+  virtual bool is_descendant_class(ClassType* the_descendant_class) const;
+CPP_DECLARE
+};
+concrete InstanceMethodCallStatement : CallStatement {
+  InstanceMethodSymbol * reference target_method;
+  bool is_dispatched default {true};
+};
+concrete StaticMethodCallStatement : CallStatement {
+  StaticMethodSymbol * reference target_method;
+};
+#concrete NewStatement : Statement {
+#  VariableSymbol* reference destination in destination_vars;
+#  ClassType * reference class_type;
+#};
+#concrete DeleteStatement : CallStatement{
+#};
+concrete CheckStatement : Statement {
+  # Expression must evaluate to true or false
+  Expression * owner check in source_ops;
+
+  # Code executed if "check" fails
+  Statement * owner body in child_statements build {0};
+};
+concrete CatchStatement : Statement {
+  Statement * owner body in child_statements;
+  VariableSymbol * reference catch_argument;
+  Type * reference catch_type;
+};
+concrete TryStatement : Statement {
+  Statement * owner body in child_statements;
+  vector<CatchStatement * owner> catch_statements in child_statements;
+};
+concrete ThrowStatement : Statement {
+  Expression * owner exception_object in source_ops;
+  Type * reference throw_type;
+};
+concrete ThrowsAnnote : GeneralAnnote {
+  searchable_list<Type* reference> throw_types;
+};
+}

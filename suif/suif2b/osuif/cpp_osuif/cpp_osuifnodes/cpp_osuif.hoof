@@ -1,0 +1,129 @@
+#include "basicnodes/basic.hoof"
+#include "suifnodes/suif.hoof"
+#include "cfenodes/cfe.hoof"
+#include "osuifnodes/osuif.hoof"
+#include "osuifextensionnodes/osuifextension.hoof"
+
+module cpp_osuif{
+  include <iostream.h>;
+  include "iokernel/cast.h";
+  include "basicnodes/basic.h";
+  include "suifnodes/suif.h";
+  include "osuifnodes/osuif.h";
+  include "osuifextensionnodes/osuifextension.h";
+  include "osuifnodes/osuif_factory.h";
+  include "suifnodes/suif_factory.h";
+
+  import basicnodes;
+  import suifnodes ;
+  import cfenodes ;
+  import osuifnodes ;
+  import osuifextensionnodes ;
+
+  #declarations
+
+concrete CppConstructorValueBlock : ExpressionValueBlock  {
+};
+
+concrete CppConstructorInitialization : InstanceMethodCallExpression {
+};
+
+concrete CppVariableDefinition : VariableDefinition {
+    bool has_location_mark;
+};
+
+concrete CppVariableDefinitionLocationStatement : Statement {
+    VariableSymbol * reference variable_symbol;
+};
+
+concrete CppInstanceMethodSymbol : InstanceMethodSymbol{
+    bool is_pure_virtual;
+    bool is_compiler_generated;
+    bool is_inline;
+    int vtable_slot_no default {0};
+    CPP_DECLARE
+      public:
+	bool is_constructor();
+	bool is_destructor();
+    CPP_DECLARE
+    CPP_BODY
+	bool CppInstanceMethodSymbol::is_constructor() {
+	    return get_name() == get_owning_class()->get_name();
+	    }
+	bool CppInstanceMethodSymbol::is_destructor() {
+	    LString name = get_name();
+	    return name[0] == '~';
+	    }
+    CPP_BODY
+};
+
+
+concrete CppStaticMethodSymbol : StaticMethodSymbol{
+    bool is_inline;
+};
+
+concrete CppConstructorDefinition : ProcedureDefinition {
+    StatementList* owner member_initialization_list;
+};
+
+concrete CppInheritanceLink : InheritanceLink{
+    bool is_virtual;
+};
+
+#	Each class type has a list of objects that belong to it. 
+concrete CppObject : SuifObject {
+    CppClassType * reference type;
+    list<CppObject * reference> sub_objects;
+    searchable_list<CppObject * reference> sub_object_closure;
+    bool is_virtual;
+    IInteger offset omitted;
+    int vtable_first_slot omitted;
+    };
+
+concrete CppClassType : ClassType {
+    FieldSymbol * reference vtable_field optional;
+    CppVTableType * reference vtable_type optional;
+    VariableSymbol * reference vtable_sym optional;
+    VariableSymbol * reference rtti_variable optional;
+    CppObject * reference object_lattice omitted;
+    searchable_list<CppObject * owner> objects;
+    IInteger size_without_virtuals omitted;
+    IInteger size_of_virtuals omitted;
+    
+    
+    list<ProcedureSymbol *reference>  friend_procedure;
+    list<CppClassType *reference>  friend_class;
+};
+
+concrete CppStructType : CppClassType {
+};
+
+concrete CppUnionType : CppClassType {
+};
+
+concrete CppVTableEntry : SuifObject {
+    int offset;			#value to add to this pointer
+    list<Symbol * reference> symbols;	#a method, a field, or a variable symbol
+				#should be exactly one entry, but can be ambiguous
+    list<CppObject *reference> objects; 
+    };
+
+concrete CppVTableType : GroupType {
+    vector <CppVTableEntry *owner> table_entries;
+    };
+
+concrete CppClassConvert : UnaryExpression {
+    };
+
+concrete CppBaseClassConvert : CppClassConvert {
+    };
+
+concrete CppDerivedClassConvert : CppClassConvert {
+    };
+
+concrete ThrowExpression : Expression {
+  Expression * owner exception_object;
+};
+
+
+}

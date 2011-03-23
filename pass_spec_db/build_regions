@@ -1,0 +1,20 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+# PRODUCES_INVARIANT = region_form
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = regionpasses transforms
+PASS_SPEC = dismantle_empty_scope_statements ; \
+	dismantle_cfors_to_fors; \
+	dismantle_c_for_statements; \
+	dismantle_multi_entry_scope_statements; \
+	mark_guarded_fors; \
+	create_regions 
+OUTPUT_EXT = .rgn

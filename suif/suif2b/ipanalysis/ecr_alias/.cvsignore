@@ -1,0 +1,6 @@
+ecr_annote_forwarders.h
+ecr_annote.h
+ecr_annote.cpp
+ecr_annote_factory.h
+standard_main.cpp
+do_ecr_alias-stamp

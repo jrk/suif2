@@ -1,0 +1,70 @@
+# file "ecr.hoof"
+#
+#
+#      Copyright (c) 1998,1999,2000 Stanford University
+#
+#      All rights reserved.
+#
+#      This software is provided under the terms described in
+#      the "suif_copyright.h" include file.
+
+#include "basicnodes/basic.hoof
+
+module ecr {
+    include "basicnodes/basic.h";
+    import basicnodes;
+    import iputils;
+    initialize init_ecr_extras;
+
+    abstract EcrSetObject : SuifObject {  # a tau or a lambda
+	IInteger id;
+    };
+
+    # Put this on the File_set_block
+    concrete EcrManagerAnnote : GeneralAnnote {
+	# LString name implements name;
+	# build { k_ecr };
+	vector < EcrSetObject * owner > ecr_sets;
+    };
+
+    concrete EcrSetTauObject : EcrSetObject {
+	# strictly speaking, the points_to_id and points_to_procedure_id
+	# are redundant
+	EcrSetTauObject * reference points_to;
+	IInteger points_to_id;
+	EcrSetLambdaObject * reference points_to_procedure;
+	IInteger points_to_procedure_id;
+
+	# Here is a list of the objects in this class.
+	list < EcrRefAnnote * reference > ecr_refs;
+    };
+
+    # The following 3 classes parallel the
+    # results.
+    concrete EcrSetLambdaObject : EcrSetObject {
+	vector<EcrAlphaSetObject * reference> arguments;
+	vector<EcrAlphaSetObject * reference> returns;
+
+	# Here is a list of the objects in this class.
+	list < ProcedureSymbol * reference > ecr_procs;
+
+    };
+
+    concrete EcrAlphaSetObject : SuifObject {
+	EcrSetTauObject * reference tau;
+	EcrSetLambdaObject * reference lambda;
+    };
+
+
+    # place this annotation with the appropriate
+    # name on the Store, Load, Variable, Procedure, or Call Site
+    concrete EcrRefAnnote : Annote {
+	# k_ecr_store_to, k_ecr_load_from
+	# k_ecr_procedure_symbol
+	# k_ecr_variable, k_ecr_allocation
+	LString name implements name;
+	EcrSetTauObject * reference ecr_set;
+	IInteger ecr_id;
+    };
+
+}

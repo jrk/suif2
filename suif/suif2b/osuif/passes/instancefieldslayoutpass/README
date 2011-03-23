@@ -1,0 +1,30 @@
+$Id: README,v 1.1.1.1 2000/06/08 00:10:02 afikes Exp $
+
+Not implemented yet.
+
+The purpose of this pass is to provide complete layout for all ClassTypes. 
+It starts with the root with one inheritance path and incrementally copies
+all the instance variables from the supertype to the subtype node.
+
+For example given the input program 
+
+class A {
+int a;
+}
+
+class B extends A {
+int b;
+}
+
+...
+
+the output will be 
+
+class A {
+int a;
+};
+
+class B extends A {
+int a;
+int b;
+};

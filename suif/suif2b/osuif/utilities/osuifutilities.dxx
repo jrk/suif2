@@ -1,0 +1,13 @@
+/**@name utilities (library)
+ *
+ * This library contains general purpose passes and
+ * functions to conveniently access and manipulate OSUIF
+ * constructs.
+ *
+ */
+
+//@{
+	//@Include: *.h
+	//@Include: *.cpp
+//@}
+

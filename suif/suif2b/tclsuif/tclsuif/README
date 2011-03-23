@@ -1,0 +1,66 @@
+The tclsuif is an attempt to integrate suif with a tcl shell.
+It is in a very early experimental stage.  Thank you for trying it out.
+Please send your comment to hwan@suif.stanford.edu.
+
+
+------------------------------------------------------------------
+I. Installation:
+
+  The current version of tclsuif is built using wish8.1.
+
+  Make sure that:
+  . you source'ed the proper nci_set.sh,
+  . TCL_INCLDIRS and TCL_LIBDIRS are porperly defined in your Makefile, and
+  . LD_LIBRARY_PATH includes libtcl8.1.so.
+
+  Then the libraries should be compiled and installed by a simple
+
+  gmake
+
+
+
+
+------------------------------------------------------------------
+II. Starting tclsuif
+
+  . source the proper nci_setup.sh or nci_setup.csh file.
+
+  . Invoke your wish8.1 shell then execute the following tcl command:
+
+  % source $env(NCIHOME)/suif/suif2b/tclsuif/tclsuif/utils.tk
+  % source $env(NCIHOME)/suif/suif2b/tclsuif/tclsuif/tclsuif.tk
+  % suif_init
+
+    You may add the above three lines into your $HOME/.wishrc file.
+
+
+-------------------------------------------------------------
+II. Commands
+
+
+
+suif <module_name> <arg1> <arg2> ...
+
+  execute a suif module <module_name>
+
+
+suif_fsb
+
+  return the FileSetBlock in the current SuifEnv.
+
+
+suif_children <suif_object>
+
+  return a list of suif objects owned by <suif_object>
+
+
+suif_fields <suif_object>
+
+  return a list of three items - field names, field values, and field types.
+
+
+show_object <suif_object>
+
+  pop up a toplevel window to show content of <suif_object>
+
+-------------------------------------------------------------------

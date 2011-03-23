@@ -1,0 +1,7 @@
+# backend pass to generate a C file to standard out
+# the OUTPUT_EXT is not strictly needed here.
+#
+PASS_TYPE = BACKEND_PASS
+REQUIRES = s2c
+PASS_SPEC = s2c -D ARCH=Linux -
+OUTPUT_EXT = .out.c

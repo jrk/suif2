@@ -1,0 +1,11 @@
+  HANDLE_DISPATCH(expression, Expression);
+  HANDLE_DISPATCH(unary_expression, UnaryExpression);
+  HANDLE_DISPATCH(binary_expression, BinaryExpression);
+  HANDLE_DISPATCH(array_reference_expression, ArrayReferenceExpression);
+  HANDLE_DISPATCH(load_expression, LoadExpression);
+  HANDLE_DISPATCH(load_variable_expression, LoadVariableExpression);
+//  HANDLE_DISPATCH(call_expression, CallExpression);
+  HANDLE_DISPATCH(symbol_address_expression, SymbolAddressExpression);
+  HANDLE_DISPATCH(va_arg_expression, VaArgExpression);
+  HANDLE_DISPATCH(int_constant, IntConstant);
+  HANDLE_DISPATCH(float_constant, FloatConstant);

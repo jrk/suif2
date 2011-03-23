@@ -1,0 +1,12 @@
+/**@name create_osuif_hello_world (program)
+ *
+ * This sample OSUIF program constructs a "Hello World" class using
+ * the OSUIF format.
+ *
+ */
+
+//@{
+	//@Include: *.h
+	//@Include: *.cpp
+//@}
+

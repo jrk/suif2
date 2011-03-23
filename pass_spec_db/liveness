@@ -1,0 +1,15 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+# REQUIRED_INVARIANT = region_form
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = liveness
+PASS_SPEC = solve_liveness
+OUTPUT_EXT = .cnst

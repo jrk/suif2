@@ -1,0 +1,4 @@
+PASS_TYPE = BACKEND_PASS
+REQUIRES = suifprinter
+PASS_SPEC = print
+OUTPUT_EXT = .out.txt

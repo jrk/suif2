@@ -1,0 +1,42 @@
+# file "iputils.hoof"
+#
+#
+#      Copyright (c) 1999 Stanford University
+#
+#      All rights reserved.
+#
+#      This software is provided under the terms described in
+#      the "suif_copyright.h" include file.
+
+#include "basicnodes/basic.hoof"
+module iputils {
+
+  include "basicnodes/basic.h";
+  initialize init_iputils_extras;
+
+# these are used for synchronizing symbols across
+# the library fileset
+    concrete SymbolXrefAnnote : Annote {
+	LString name implements name;
+	Symbol * reference xsymbol;
+    };
+
+    # these are used for synchronizing finding 
+    # structurally equivalent types. 
+    concrete TypeListRefAnnote : Annote {
+	LString name implements name;
+	list<Type * reference> typelist;
+    };
+
+# This is a list of call targets placed on each call site
+    concrete CallTargetAnnote : Annote {
+	LString name implements name;
+	list<ProcedureSymbol * reference> targets;
+    };
+
+# This annote acts as a boolean flag that is placed on the 
+# entry point to the program
+	concrete MainProcAnnote [MainProcAnnote] : Annote {
+	LString name implements name default{"MainProcAnnote"};
+    };
+}

@@ -1,0 +1,87 @@
+$Id: README,v 1.1.1.1 2000/06/08 00:10:03 afikes Exp $
+
+vtbl
+----
+
+The virtual function table construcion consists of
+- the vtbl IR nodes ( ./osuif/passes/vtbl )
+- the vtbl pass (./osuif/passes/vtblpass )
+
+The vtbl construction is restricted to single inheritance
+(SingleInheritanceClassType)!
+
+
+The idea of the current design is to give the user maximum flexibility
+in making use of the vtbl code:
+
+
+i) vtbl pass
+
+This pass builds a vtbl for every SingleInheritancClassType in the
+OSUIF file. Furthermore InstanceMethodCallStatements are lowered to
+an indirect function call through the vtbl.
+
+This "standard" behavior should be sufficient for simple
+single-inheritance languages, such as Delphi(?), Ada(?), or Oberon(?).
+
+This pass can be run either as a stand-alone executable or with the
+suifdriver.
+
+
+ii) vtbl IR nodes
+
+All vtbl IR nodes are implemented in the
+./osuif/passes/vtbl/vtbl.hoof
+file. Actually, all IR nodes are specific annotations (subclassed from
+GeneralAnnote).
+
+Vtbl annotations give the front-end more control of the code
+generation done by the vtbl pass.
+
+Sometimes the front-end needs information that is provided later by
+the vtbl pass. For example, in order to implement JNI capability in
+Java, it is necessary for the front-end to know at which vtbl slot a
+certain method is located. This information is typically kept in a
+meta-data structure, which is built by the front-end. Alas, the
+front-end can't possibly know the slot number when it generates the
+meta-data, since the vtbl has not been built yet.
+
+To resolve this dilemma, the front-end can place an annotation at the
+IntConstant that is supposed to contain the slot number. The vtbl pass
+fills in the actual slot number. This functionality is provided by the
+VtblSlotAnnote.
+
+Similarly to the above scenario, it's sometimes necessary for the
+front-end to control where the vtbl actually goes. In Java, for
+example, the location of the vtbl must be know to make calls through
+JNI. (The vtbl pass constructs the vtbl by building an "anonymous"
+VariableSymbol with static initialization.) The front-end can place a
+VtblAnnote at the VariableSymbol that is supposed to hold the
+vtbl. The vtbl pass constructs the vtbl (as a static
+VariableDefinition) and attaches it to the VariableSymbol.
+
+Service routines are provided in
+./osuif/passes/vtbl/vtbl_utils.{h,cpp}
+to attach the VtblSlotAnnote and VtblAnnote.
+
+This mechansim is sufficient for languages such as Java.
+
+
+iii) SingleInheritanceVtbls Class
+
+The SingleInheritanceVtbls class in
+./osuif/passes/vtbl/vtbl_utils.{h,cpp}
+builds the vtbls. This class is used by the vtbl pass to get its job
+done.
+
+By decoupling the actual vtbl construction from the pass, we give a
+front-end the opportunity to
+
+- subclass from SingleInheritanceVtbls in order to implement front-end
+specific behavior.
+- directly use the SingleInheritanceVtbls class to generate vtbls
+(thus circumventing the vtbl pass).
+
+
+The scheme described above is farily generic and is also used at the
+lowering and instancefieldlayout implementation.

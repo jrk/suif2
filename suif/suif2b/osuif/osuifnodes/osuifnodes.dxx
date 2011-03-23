@@ -1,0 +1,12 @@
+/**@name osuifnodes (library)
+ *
+ * This library defines the OSUIF intermediate representation, which
+ * is build on top of SUIF.
+ *
+ */
+
+//@{
+	//@Include: *.h
+	//@Include: *.cpp
+//@}
+

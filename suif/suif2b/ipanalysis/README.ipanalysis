@@ -1,0 +1,9 @@
+ipanalysis
+
+This package currently contains:
+iputils:   an interface for interprocedural call graph queries
+ecrnodes:  SUIF IR nodes for recording the results of a
+		Steensgaard alias analysis
+ecr_alias: Implementation of the Steensgaard almost-linear time
+		algorithm with enhancements for analyzing only
+		reachable procedures.

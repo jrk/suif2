@@ -1,0 +1,24 @@
+# PASS_TYPE can be "FRONTEND_PASS"
+#                  "TRANSFORM_PASS"
+#                  "BACKEND_PASS"
+#                  "LINKING_PASS"
+#		   "SPLITTING_PASS"
+#
+# @INPUTFILE@ will be replaced by the input filename for
+#  frontend passes
+# @OUTPUTFILE@ will be replaced by the output filename for
+#  backend passes
+PASS_TYPE = TRANSFORM_PASS
+REQUIRES = usefulpasses transforms
+PASS_SPEC = set_address_taken; \
+	dismantle_cfors_to_fors ; \
+	dismantle_c_for_statements ; \
+	dismantle_call_expressions ; \
+	dismantle_empty_scope_statements ; \
+	dismantle_multi_entry_scope_statements ; \
+	require_procedure_returns ; \
+	normalize_procedure_returns ; \
+	rename_colliding_symbols ; \
+	gc_symbol_table ; \
+	recycle_trash
+OUTPUT_EXT = .suif

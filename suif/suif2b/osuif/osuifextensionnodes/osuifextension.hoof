@@ -1,0 +1,53 @@
+
+#include "basicnodes/basic.hoof"
+#include "suifnodes/suif.hoof"
+#include "cfenodes/cfe.hoof"
+#include "osuifnodes/osuif.hoof"
+
+
+module osuifextension {
+  include <iostream.h>;
+  include "iokernel/cast.h";
+  include "basicnodes/basic.h";
+  include "suifnodes/suif.h";
+  include "cfenodes/cfe.h";
+  include "osuifnodes/osuif.h";
+  include "osuifnodes/osuif_factory.h";
+
+  import basicnodes;
+  import suifnodes;
+  import cfenodes;
+  import osuifnodes;
+
+concrete SingleInheritanceClassType : ClassType {
+  VariableSymbol * reference vtbl_symbol omitted;
+CPP_DECLARE
+public:
+  virtual SingleInheritanceClassType* parent_class();
+
+  virtual bool is_super_class( SingleInheritanceClassType* sub_class );
+  virtual bool is_sub_class( SingleInheritanceClassType* super_class );
+
+  virtual StaticMethodSymbol* lookup_static_method( const LString& name,
+                                            StaticMethodType* mtype);
+  virtual StaticFieldSymbol* lookup_static_field (const LString& name);
+  virtual InstanceMethodSymbol*
+  lookup_local_instance_method_symbol( const LString& name,
+                                       InstanceMethodType* mtype );
+  virtual InstanceMethodSymbol*
+  lookup_transitive_instance_method_symbol( const LString& name,
+                                            InstanceMethodType* mtype );
+
+  virtual InstanceFieldSymbol*
+  lookup_transient_instance_field( const LString& name );
+CPP_DECLARE
+
+};
+concrete StaticMethodCallExpression : CallExpression {
+  StaticMethodSymbol * reference target_method;
+};
+concrete InstanceMethodCallExpression : CallExpression {
+  InstanceMethodSymbol * reference target_method;
+  bool is_dispatched;
+};
+}

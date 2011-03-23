@@ -1,0 +1,68 @@
+# file "cfgraphnodes.hoof"
+#
+#
+#      Copyright (c) 1999 Stanford University
+#
+#      All rights reserved.
+#
+#      This software is provided under the terms described in
+#      the "suif_copyright.h" include file.
+
+#include "../../basesuif/basicnodes/basic.hoof"
+#include "../cfgraph.hoof"
+module suif_cfgraph {
+
+    include "basicnodes/basic.h";
+#    include "suif_cfgraph_forwarders.h";
+#    include "sgraph/sgraph_forwarders.h";
+    import basicnodes;
+
+# These sit on a procedure definition
+#
+# The graph owns All of the CFGraphNodes
+#
+#
+# The CFAnnote on an object contains a
+# vector of AnnotableObjects
+#
+    concrete CFGraphNodeList : SuifObject {
+        list<CFGraphNode * reference> nodes;
+    };
+
+    concrete CFGraphAnnote : Annote{
+	LString name implements name;
+	vector<CFGraphNode * owner> nodes;
+        vector<CFGraphNodeList * owner> successors;
+	ProcedureDefinition * reference proc;
+	int entry_node;
+	int exit_node;
+
+    };
+
+# The semantics of this node are convoluted.  Use the 
+# CFGraphQuery class instead of the node itself.
+#  Here's the brief description:
+# The node always has a "base" object.
+#  If there is an "owned_object" then the node
+#   has been virtually dismantled from a complex node
+#  If there is an owned object and it is marked
+#   one-to-one, then there is a one to one
+#   correspondence between the base and owned object
+#   (i.e. substitution and transformation may be performed
+#    on the base object)
+
+    concrete CFGraphNode : SuifObject {
+      LString name;
+      bool is_executable;
+      bool is_one_to_one;
+      AnnotableObject * reference base;  ## the associated object
+      int id;  # graph node number
+      ExecutionObject * owner owned_object;  ## any owned executable code
+    };
+
+	
+     concrete SuifObjAnnote : Annote {
+       LString name implements name;
+       int cfg_node_num;
+     };
+}
